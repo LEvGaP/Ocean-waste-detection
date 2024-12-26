@@ -5,6 +5,8 @@ import threading
 import math
 
 class ThreadedLoader:
+    __instance = None
+
     def __init__(self, aws_access_key_id, aws_secret_access_key, 
                  endpoint_url="https://storage.yandexcloud.net", bucket_name="waste"):
         self.resource = boto3.resource(
@@ -15,7 +17,15 @@ class ThreadedLoader:
         )
         self.bucket_name = bucket_name
         self.bucket = self.resource.Bucket(bucket_name)
+        ThreadedLoader.__instance = self
         pass
+
+    @classmethod
+    def get_instance(cls):
+        if cls.__instance is None:
+            raise RuntimeError("threaded loader was not created yet")
+        instance: ThreadedLoader = cls.__instance
+        return instance
     
     def download_list(self, object_keys, on_complete = lambda: None):
         for key in object_keys:
