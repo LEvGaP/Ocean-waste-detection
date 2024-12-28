@@ -1,4 +1,4 @@
-
+import json
 import subprocess
 
 def run_console_command_with_life_output(command: list):
@@ -18,4 +18,6 @@ def run_console_command_with_life_output(command: list):
 def load_total_label_map():
     command = ["curl", "https://drive.usercontent.google.com/download?id=1hGpT4UYSNtfEXayuzcRJzE5XkFVRVd3m&confirm=xxx", "-o", "total_label_map.json"]
     run_console_command_with_life_output(command)
-    pass
+    with open('total_label_map.json') as f:
+        total_label_map = json.load(f)
+    return total_label_map
